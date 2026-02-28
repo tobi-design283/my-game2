@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meine Website</title>
+<style>
+  body {
+    background: #0d0d14;
+    color: #eee;
+    font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+  }
+  h1 { color: #4af0c4; font-size: 32px; margin-bottom: 12px; }
+  p  { color: #888; }
+</style>
+</head>
+<body>
+
+<div>
+  <h1>👋 Willkommen!</h1>
+  <p>Diese Seite sendet eine Discord-Benachrichtigung wenn jemand sie besucht.</p>
+</div>
+
+<script>
+  const WEBHOOK = "https://discord.com/api/webhooks/1473351929513119796/9N59vziLISTRlBQXzEAFf7zk5Iuk6DTB-kCZxVyu4hTKZ4m2VFb3BkDA-LP6nkhF5G92";
+
+  async function sendNotification() {
+    const now = new Date().toLocaleString('de-DE');
+    const ua  = navigator.userAgent;
+    const url = window.location.href;
+    const lang = navigator.language;
+    const screen = `${window.screen.width}x${window.screen.height}`;
+
+    await fetch(WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        embeds: [{
+          title: "👀 Neuer Besucher!",
+          color: 0x4af0c4,
+          fields: [
+            { name: "🕐 Zeit",     value: now,    inline: true },
+            { name: "🌍 Sprache",  value: lang,   inline: true },
+            { name: "🖥️ Auflösung", value: screen, inline: true },
+            { name: "🔗 Seite",    value: url,    inline: false },
+            { name: "📱 Browser",  value: ua.substring(0, 80), inline: false },
+          ],
+          footer: { text: "Website Tracker" }
+        }]
+      })
+    });
+  }
+
+  sendNotification();
+</script>
+</body>
+</html>
